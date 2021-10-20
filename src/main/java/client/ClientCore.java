@@ -18,11 +18,11 @@ public class ClientCore implements Runnable{
     private BufferedReader br;
     private LoginController loginController;
     private ChatController chatController;
-    public ClientCore(String clientName, LoginController loginController, ChatController chatController) throws IOException {
+    public ClientCore(String clientName,int port, LoginController loginController, ChatController chatController) throws IOException {
         this.clientName = clientName;
         this.loginController = loginController;
         this.chatController = chatController;
-        clientSocket = new Socket("localhost", 9999);
+        clientSocket = new Socket("localhost", port);
 
     }
     @Override

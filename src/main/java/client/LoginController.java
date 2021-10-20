@@ -16,9 +16,12 @@ import java.io.IOException;
 public class LoginController {
     @FXML private Button btnLogin;
     @FXML private TextField tfUsername;
+    @FXML private TextField tfPort;
+
     private Scene scene;
     public void login() throws IOException {
         String username = tfUsername.getText();
+        int port = Integer.parseInt(tfPort.getText());
         Platform.runLater(() -> {
             try{
                 FXMLLoader chatLoader = new FXMLLoader(getClass().getResource("/views/ChatView.fxml"));
@@ -32,7 +35,7 @@ public class LoginController {
                 });
                 this.scene = new Scene(root);
                 stage.centerOnScreen();
-                ClientCore clientCore = new ClientCore(username, this, chatController);
+                ClientCore clientCore = new ClientCore(username,port, this, chatController);
                 new Thread(clientCore).start();
                 stage.setScene(this.scene);
             } catch (IOException e) {
