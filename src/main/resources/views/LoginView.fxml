@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="266.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.LoginController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="162.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.0" minWidth="10.0" prefWidth="287.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="144.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="222.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="258.0" minHeight="5.0" prefHeight="70.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="291.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="291.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="291.0" minHeight="7.0" prefHeight="7.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+
+      <Label alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="238.0" text="Login" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <font>
+            <Font size="47.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfUsername" prefHeight="43.0" prefWidth="250.0" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="174.0" style="-fx-background-color: #009900;" text="Login" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+
+</GridPane>

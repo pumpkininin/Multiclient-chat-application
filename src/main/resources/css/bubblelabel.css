@@ -1,0 +1,4 @@
+.chat-bubble{
+    -fx-padding: 0px 5px 0px 5px;
+    -fx-border-radius: 10px;
+}
