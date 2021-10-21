@@ -2,7 +2,6 @@ package server;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 public class Message implements Serializable {
     private String sender;
@@ -61,6 +60,6 @@ public class Message implements Serializable {
         this.type = type;
     }
     public enum Type{
-        LOGIN, MSG
+        LOGIN, MSG, DUPLICATED
     }
 }

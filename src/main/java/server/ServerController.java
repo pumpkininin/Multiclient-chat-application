@@ -12,6 +12,7 @@ import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.BindException;
 
 public class ServerController implements Serializable {
     @FXML private Button startBtn;
@@ -22,18 +23,23 @@ public class ServerController implements Serializable {
 
     public void startServer() throws IOException, InterruptedException {
         String port = tfPort.getText();
-        updateStatus("Server started at port: " + port);
-        serverCore = new  ServerCore(Integer.parseInt(port));
-        serverCore.startServer();
-        startBtn.setDisable(true);
+        try{
+            serverCore = new  ServerCore(Integer.parseInt(port), this);
+            updateStatus("Server started at port: " + port, Color.GREEN);
+            serverCore.startServer();
+            startBtn.setDisable(true);
+        }catch (BindException e){
+            updateStatus("Port " + port + " already in used. Please choose another port!", Color.RED);
+        }
+
     }
     public void stopServer(){
         serverCore.stopServer();
     }
-    public void updateStatus(String content){
-        Text text = new Text(10, 20, content);
+    public void updateStatus(String content, Color color){
+        Text text = new Text(10, 20, content +"\n");
         text.setFont(Font.font("System", 20));
-        text.setFill(Color.GREEN);
+        text.setFill(color);
         tfStatus.getChildren().add(text);
     }
 }

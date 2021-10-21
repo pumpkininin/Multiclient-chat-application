@@ -1,9 +1,13 @@
 package server;
 
 
+import exception.DuplicatedUsernameException;
+import javafx.scene.paint.Color;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -15,16 +19,17 @@ public class ServerCore {
     private static List<String> clients;
     private static ServerSocket serverSocket;
     private ExecutorService executorService;
-//    private boolean isRunning;
     private int port;
-    public ServerCore(int port) throws IOException {
+    private ServerController serverController;
+    public ServerCore(int port, ServerController serverController) throws IOException, BindException {
         this.port = port;
+        this.serverController = serverController;
         serverSocket = new ServerSocket(port);
         executorService = Executors.newCachedThreadPool();
         osHashMap = new HashMap<>();
         clients = new ArrayList<>();
     }
-    public void startServer() throws IOException {
+    public void startServer() throws IOException, BindException {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -66,10 +71,9 @@ public class ServerCore {
                     if(msg !=null){
                         switch (msg.getType()){
                             case LOGIN:
-                                osHashMap.put(msg.getSender(), os);
-                                System.out.println(msg.getSender());
-                                clients.add(msg.getSender());
-                                sendActiveClients(clients);
+                                    osHashMap.put(msg.getSender(), os);
+                                    clients.add(msg.getSender());
+                                    sendActiveClients(clients);
                                 break;
                             case MSG:
                                 System.out.println("Message to "+ msg.getReceiver());
@@ -84,6 +88,8 @@ public class ServerCore {
                 e.printStackTrace();
             }
         }
+
+
         private void sendMsg(Message msg) throws IOException {
             ObjectOutputStream osReceiver = osHashMap.get(msg.getReceiver());
             osReceiver.writeObject(msg);

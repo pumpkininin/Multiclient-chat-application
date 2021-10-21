@@ -24,19 +24,19 @@ public class LoginController {
         int port = Integer.parseInt(tfPort.getText());
         Platform.runLater(() -> {
             try{
+                ClientCore clientCore = new ClientCore(username,port);
+                new Thread(clientCore).start();
                 FXMLLoader chatLoader = new FXMLLoader(getClass().getResource("/views/ChatView.fxml"));
                 Parent root = chatLoader.load();
                 ChatController chatController = chatLoader.<ChatController>getController();
-                Stage stage = (Stage) btnLogin.getScene().getWindow();
                 chatController.initData(tfUsername.getText());
+                Stage stage = (Stage) btnLogin.getScene().getWindow();
                 stage.setOnCloseRequest((WindowEvent e) -> {
                     Platform.exit();
                     System.exit(0);
                 });
                 this.scene = new Scene(root);
                 stage.centerOnScreen();
-                ClientCore clientCore = new ClientCore(username,port, this, chatController);
-                new Thread(clientCore).start();
                 stage.setScene(this.scene);
             } catch (IOException e) {
                 e.printStackTrace();
