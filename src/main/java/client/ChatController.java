@@ -51,16 +51,23 @@ public class ChatController implements Initializable {
         listView.setCellFactory(new ItemRenderer());
     }
     public void sendMsg() throws IOException {
-        String msg = txMsg.getText();
-        if(!txMsg.getText().isEmpty()) {;
-            ClientCore.sendMsg(msg, receiver);
-            Message message = new Message();
-            message.setSender(usernameLbl.getText());
-            message.setReceiver(receiver);
-            message.setContent(msg);
-            appendMsg(message);
+        if(listView.getSelectionModel().getSelectedItem() == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("You need to choose an user first!");
+            alert.showAndWait();
+        }else{
+            String msg = txMsg.getText();
+            if(!txMsg.getText().isEmpty()) {;
+                ClientCore.sendMsg(msg, receiver);
+                Message message = new Message();
+                message.setSender(usernameLbl.getText());
+                message.setReceiver(receiver);
+                message.setContent(msg);
+                appendMsg(message);
+            }
+            txMsg.clear();
         }
-        txMsg.clear();
+
     }
 
     public synchronized void appendMsg(Message message) {
@@ -110,4 +117,5 @@ public class ChatController implements Initializable {
     public void initData(String selectedItem) {
         usernameLbl.setText(selectedItem);
     }
+
 }

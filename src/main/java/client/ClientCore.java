@@ -23,7 +23,6 @@ public class ClientCore implements Runnable{
         this.loginController = loginController;
         this.chatController = chatController;
         clientSocket = new Socket("localhost", port);
-
     }
     @Override
     public void run() {

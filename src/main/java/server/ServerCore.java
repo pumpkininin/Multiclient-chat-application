@@ -75,6 +75,7 @@ public class ServerCore {
                                 System.out.println("Message to "+ msg.getReceiver());
                                 sendMsg(msg);
                                 break;
+
                         }
 
                     }
@@ -83,31 +84,32 @@ public class ServerCore {
                 e.printStackTrace();
             }
         }
-    }
-    private void sendMsg(Message msg) throws IOException {
-        ObjectOutputStream osReceiver = osHashMap.get(msg.getReceiver());
-        osReceiver.writeObject(msg);
-        osReceiver.flush();
-        osReceiver.reset();
-    }
-    private void sendActiveClients(List<String> clients){
-        Message msg = new Message();
-        msg.setSender("SERVER");
-        msg.setActiveUsers(clients);
-        msg.setType(Message.Type.LOGIN);
-        System.out.println(clients);
-        osHashMap.forEach((key, value) ->{
-            try {
-                System.out.println(key);
-                msg.setReceiver(key);
-                System.out.println(value);
-                value.writeObject(msg);
-                value.flush();
-                value.reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } );
+        private void sendMsg(Message msg) throws IOException {
+            ObjectOutputStream osReceiver = osHashMap.get(msg.getReceiver());
+            osReceiver.writeObject(msg);
+            osReceiver.flush();
+            osReceiver.reset();
+        }
+        private void sendActiveClients(List<String> clients){
+            Message msg = new Message();
+            msg.setSender("SERVER");
+            msg.setActiveUsers(clients);
+            msg.setType(Message.Type.LOGIN);
+            System.out.println(clients);
+            osHashMap.forEach((key, value) ->{
+                try {
+                    System.out.println(key);
+                    msg.setReceiver(key);
+                    System.out.println(value);
+                    value.writeObject(msg);
+                    value.flush();
+                    value.reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } );
 
+        }
     }
+
 }
