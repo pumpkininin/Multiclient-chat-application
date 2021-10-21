@@ -2,7 +2,6 @@ package client;
 
 
 
-import exception.DuplicatedUsernameException;
 import server.Message;
 
 import java.io.*;
@@ -19,8 +18,9 @@ public class ClientCore implements Runnable{
     private BufferedReader br;
     private LoginController loginController;
     private ChatController chatController;
-    public ClientCore(String clientName,int port) throws IOException, DuplicatedUsernameException {
+    public ClientCore(String clientName,int port, ChatController chatController) throws IOException {
         this.clientName = clientName;
+        this.chatController = chatController;
         clientSocket = new Socket("localhost", port);
     }
 

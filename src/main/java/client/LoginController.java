@@ -24,8 +24,6 @@ public class LoginController {
         int port = Integer.parseInt(tfPort.getText());
         Platform.runLater(() -> {
             try{
-                ClientCore clientCore = new ClientCore(username,port);
-                new Thread(clientCore).start();
                 FXMLLoader chatLoader = new FXMLLoader(getClass().getResource("/views/ChatView.fxml"));
                 Parent root = chatLoader.load();
                 ChatController chatController = chatLoader.<ChatController>getController();
@@ -35,6 +33,8 @@ public class LoginController {
                     Platform.exit();
                     System.exit(0);
                 });
+                ClientCore clientCore = new ClientCore(username,port, chatController);
+                new Thread(clientCore).start();
                 this.scene = new Scene(root);
                 stage.centerOnScreen();
                 stage.setScene(this.scene);

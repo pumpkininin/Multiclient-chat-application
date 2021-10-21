@@ -1,7 +1,6 @@
 package server;
 
 
-import exception.DuplicatedUsernameException;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
