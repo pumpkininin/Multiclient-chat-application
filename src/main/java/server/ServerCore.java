@@ -13,11 +13,11 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerCore {
-    private static HashMap<String, ObjectOutputStream> osHashMap;
-    private static List<String> clients;
+public class ServerCore implements Runnable{
+    private static HashMap<String, ObjectOutputStream> osHashMap;// store os for each client
+    private static List<String> clients;//list store name of the connected client
     private static ServerSocket serverSocket;
-    private ExecutorService executorService;
+    private ExecutorService executorService;//thread pool
     private int port;
     private ServerController serverController;
     public ServerCore(int port, ServerController serverController) throws IOException, BindException {
@@ -28,29 +28,22 @@ public class ServerCore {
         osHashMap = new HashMap<>();
         clients = new ArrayList<>();
     }
-    public void startServer() throws IOException, BindException {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Waiting for client...");
-                while(true){
-                    Socket clientSocket = null;
-                    try {
-                        clientSocket = serverSocket.accept();
+    @Override
+    public void run() {
+        System.out.println("Waiting for client...");
+        while(true){
+            Socket clientSocket = null;
+            try {
+                clientSocket = serverSocket.accept();
                     } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    ServerService clientThread = new ServerService(clientSocket);
-                    executorService.execute(clientThread);
-                }
+                e.printStackTrace();
             }
-        }).start();
+            ServerService clientThread = new ServerService(clientSocket);
+            executorService.execute(clientThread);
+        }
+    }
 
-    }
-    public void stopServer() {
-        executorService.shutdown();
-    }
-    class ServerService extends Thread{
+    class ServerService extends Thread{//handler request from client
         private Socket clientSocket;
         private ObjectOutputStream os;
         private ObjectInputStream is;
@@ -62,7 +55,6 @@ public class ServerCore {
         @Override
         public void run() {
             try{
-                System.out.println("still waiting");
                 os = new ObjectOutputStream(clientSocket.getOutputStream());
                 is = new ObjectInputStream(clientSocket.getInputStream());
                 while(true){
@@ -70,9 +62,9 @@ public class ServerCore {
                     if(msg !=null){
                         switch (msg.getType()){
                             case LOGIN:
-                                    osHashMap.put(msg.getSender(), os);
-                                    clients.add(msg.getSender());
-                                    sendActiveClients(clients);
+                                osHashMap.put(msg.getSender(), os);
+                                clients.add(msg.getSender());
+                                sendActiveClients(clients);
                                 break;
                             case MSG:
                                 System.out.println("Message to "+ msg.getReceiver());

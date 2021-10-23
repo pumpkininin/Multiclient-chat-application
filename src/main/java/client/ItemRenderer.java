@@ -23,7 +23,7 @@ public  class ItemRenderer implements Callback<ListView<String>, ListCell<String
                     HBox hBox = new HBox();
                     Text name = new Text(item);
                     hBox.getChildren().addAll( name);
-                    hBox.setAlignment(Pos.CENTER_LEFT);
+                    hBox.setAlignment(Pos.CENTER_RIGHT);
                     setGraphic(hBox);
                 }else{
                     setText("");

@@ -26,7 +26,7 @@ public class ServerController implements Serializable {
         try{
             serverCore = new  ServerCore(Integer.parseInt(port), this);
             updateStatus("Server started at port: " + port, Color.GREEN);
-            serverCore.startServer();
+            new Thread(serverCore).start();
             startBtn.setDisable(true);
         }catch (BindException e){
             updateStatus("Port " + port + " already in used. Please choose another port!", Color.RED);
@@ -34,7 +34,7 @@ public class ServerController implements Serializable {
 
     }
     public void stopServer(){
-        serverCore.stopServer();
+        updateStatus("Server stopped", Color.RED);
     }
     public void updateStatus(String content, Color color){
         Text text = new Text(10, 20, content +"\n");

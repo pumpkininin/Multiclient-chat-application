@@ -45,7 +45,7 @@ public class ChatController implements Initializable {
 
     }
     public void updateUserList(List<String> users) {
-        ObservableList<String> observableList = FXCollections.observableList(users);
+        ObservableList<String> observableList = FXCollections.observableList(users);//convert list<Stirng> to observablelist
         System.out.println(observableList);
         listView.setItems(observableList);
         listView.setCellFactory(new ItemRenderer());
