@@ -1,5 +1,6 @@
 package server;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,6 +14,8 @@ import javafx.scene.text.TextFlow;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.BindException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerController implements Serializable {
     @FXML private Button startBtn;
@@ -20,6 +23,7 @@ public class ServerController implements Serializable {
     @FXML private TextField tfPort;
     @FXML private TextFlow tfStatus;
     private ServerCore serverCore;
+
 
     public void startServer() throws IOException, InterruptedException {
         String port = tfPort.getText();
@@ -33,13 +37,16 @@ public class ServerController implements Serializable {
         }
 
     }
-    public void stopServer(){
-        updateStatus("Server stopped", Color.RED);
+    public void stopServer() throws InterruptedException {
+        Platform.exit();
     }
-    public void updateStatus(String content, Color color){
-        Text text = new Text(10, 20, content +"\n");
-        text.setFont(Font.font("System", 20));
-        text.setFill(color);
-        tfStatus.getChildren().add(text);
+    public synchronized void updateStatus(String content, Color color){
+        Platform.runLater(() -> {
+            Text text = new Text(10, 20, content +"\n");
+            text.setFont(Font.font("System", 20));
+            text.setFill(color);
+            tfStatus.getChildren().add(text);
+        });
+
     }
 }

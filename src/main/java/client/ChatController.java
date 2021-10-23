@@ -1,5 +1,6 @@
 package client;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -14,7 +15,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import server.Message;
 
 import java.io.IOException;
@@ -48,7 +51,29 @@ public class ChatController implements Initializable {
         ObservableList<String> observableList = FXCollections.observableList(users);//convert list<Stirng> to observablelist
         System.out.println(observableList);
         listView.setItems(observableList);
-        listView.setCellFactory(new ItemRenderer());
+        listView.setCellFactory(new Callback<ListView, ListCell>() {
+            @Override
+            public ListCell call(ListView param) {
+                ListCell<String> cell = new ListCell<String>(){
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setGraphic(null);
+                        setText(null);
+                        if(item != null){
+                            HBox hBox = new HBox();
+                            Text name = new Text(item);
+                            hBox.getChildren().addAll( name);
+                            hBox.setAlignment(Pos.CENTER_LEFT);
+                            setGraphic(hBox);
+                        }else{
+                            setText("");
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
     }
     public void sendMsg() throws IOException {
         if(listView.getSelectionModel().getSelectedItem() == null){
@@ -118,4 +143,13 @@ public class ChatController implements Initializable {
         usernameLbl.setText(selectedItem);
     }
 
+    public void notifyUpdated() {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Update list");
+            alert.setContentText("Someone has been logout! List of active users has been updated");
+            alert.show();
+        });
+
+    }
 }

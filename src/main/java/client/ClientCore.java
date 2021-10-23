@@ -47,14 +47,12 @@ public class ClientCore implements Runnable{
                             break;
                         case LOGIN:
                             List<String> activeClients = message.getActiveUsers();
-                            Iterator iterator = activeClients.iterator();
-                            while (iterator.hasNext()){
-                                String client = (String) iterator.next();
-                                if(client.equals(clientName)){
-                                    iterator.remove();
-                                }
-                            }
-                            chatController.updateUserList(activeClients);
+                            updateList(activeClients);
+                            break;
+                        case LOGOUT:
+                            List<String> activeClient = message.getActiveUsers();
+                            updateList(activeClient);
+                            chatController.notifyUpdated();
                             break;
                     }
 
@@ -64,6 +62,18 @@ public class ClientCore implements Runnable{
             e.printStackTrace();
         }
     }
+
+    private void updateList(List<String> activeClients) {
+        Iterator iterator = activeClients.iterator();
+        while (iterator.hasNext()){
+            String client = (String) iterator.next();
+            if(client.equals(clientName)){
+                iterator.remove();
+            }
+        }
+        chatController.updateUserList(activeClients);
+    }
+
     public static void sendMsg(String msg, String receiver) throws IOException {
         Message newMsg = new Message();
         newMsg.setContent(msg);

@@ -60,6 +60,6 @@ public class Message implements Serializable {
         this.type = type;
     }
     public enum Type{
-        LOGIN, MSG, DUPLICATED
+        LOGIN, MSG, LOGOUT
     }
 }

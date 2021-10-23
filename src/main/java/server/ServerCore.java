@@ -2,6 +2,7 @@ package server;
 
 
 import javafx.scene.paint.Color;
+import sun.net.ConnectionResetException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,9 +10,11 @@ import java.io.ObjectOutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerCore implements Runnable{
     private static HashMap<String, ObjectOutputStream> osHashMap;// store os for each client
@@ -20,6 +23,7 @@ public class ServerCore implements Runnable{
     private ExecutorService executorService;//thread pool
     private int port;
     private ServerController serverController;
+    private static AtomicBoolean isRunning = new AtomicBoolean(true);
     public ServerCore(int port, ServerController serverController) throws IOException, BindException {
         this.port = port;
         this.serverController = serverController;
@@ -31,7 +35,8 @@ public class ServerCore implements Runnable{
     @Override
     public void run() {
         System.out.println("Waiting for client...");
-        while(true){
+        isRunning.set(true);
+        while(isRunning.get()){
             Socket clientSocket = null;
             try {
                 clientSocket = serverSocket.accept();
@@ -41,9 +46,11 @@ public class ServerCore implements Runnable{
             ServerService clientThread = new ServerService(clientSocket);
             executorService.execute(clientThread);
         }
+        executorService.shutdownNow();
     }
 
     class ServerService extends Thread{//handler request from client
+        private String clientName;
         private Socket clientSocket;
         private ObjectOutputStream os;
         private ObjectInputStream is;
@@ -63,8 +70,9 @@ public class ServerCore implements Runnable{
                         switch (msg.getType()){
                             case LOGIN:
                                 osHashMap.put(msg.getSender(), os);
+                                clientName = msg.getSender();
                                 clients.add(msg.getSender());
-                                sendActiveClients(clients);
+                                sendNotify(clients, Message.Type.LOGIN);
                                 break;
                             case MSG:
                                 System.out.println("Message to "+ msg.getReceiver());
@@ -75,6 +83,12 @@ public class ServerCore implements Runnable{
 
                     }
                 }
+            } catch (SocketException e){
+                osHashMap.remove(clientName);
+                clients.remove(clientName);
+                serverController.updateStatus(clientName + " has been logout", Color.RED);
+                sendNotify(clients, Message.Type.LOGOUT);
+                System.out.println(clientName + " has been logout");
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -87,17 +101,15 @@ public class ServerCore implements Runnable{
             osReceiver.flush();
             osReceiver.reset();
         }
-        private void sendActiveClients(List<String> clients){
+        private void sendNotify(List<String> clients, Message.Type type){
             Message msg = new Message();
             msg.setSender("SERVER");
             msg.setActiveUsers(clients);
-            msg.setType(Message.Type.LOGIN);
+            msg.setType(type);
             System.out.println(clients);
             osHashMap.forEach((key, value) ->{
                 try {
-                    System.out.println(key);
                     msg.setReceiver(key);
-                    System.out.println(value);
                     value.writeObject(msg);
                     value.flush();
                     value.reset();
