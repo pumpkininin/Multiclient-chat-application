@@ -13,3 +13,4 @@ This chat application allow user to assign an username for identity, and join th
 3. Chat view<br/>
 ![chat-view](screenshots/chat.PNG)<br/>
 ![chat-view](screenshots/chatting-view.PNG)<br/>
+##Exception
