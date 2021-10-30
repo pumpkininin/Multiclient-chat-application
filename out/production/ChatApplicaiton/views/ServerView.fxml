@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="serverView" prefHeight="431.0" prefWidth="732.0" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.ServerController">
+    <children>
+        <TextField layoutX="114.0" layoutY="112.0" prefHeight="52.0" prefWidth="209.0" />
+        <TextField fx:id="tfPort" layoutX="114.0" layoutY="210.0" prefHeight="52.0" prefWidth="209.0" />
+        <Text layoutX="47.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address: ">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Text layoutX="47.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port: ">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Button fx:id="startBtn" layoutX="414.0" layoutY="154.0" mnemonicParsing="false" onAction="#startServer" prefHeight="62.0" prefWidth="105.0" style="-fx-background-color: green;" text="START">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnStop" layoutX="544.0" layoutY="154.0" mnemonicParsing="false" onAction="#stopServer" prefHeight="62.0" prefWidth="105.0" style="-fx-background-color: #CC3300;" text="STOP">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Button>
+      <TextFlow fx:id="tfStatus" layoutX="25.0" layoutY="274.0" prefHeight="124.0" prefWidth="659.0" style="-fx-background-color: white;" />
+    </children>
+</AnchorPane>
